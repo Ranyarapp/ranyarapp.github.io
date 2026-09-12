@@ -1,141 +1,190 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بازیابی رمز عبور - رانیار</title>
+    <title>رانیار - مدیریت هوشمند درآمد و هزینه خودرو</title>
+    <meta name="description" content="رانیار اپلیکیشن مدیریت مالی برای رانندگان تاکسی و خودروهای شخصی. ثبت درآمد، هزینه، سوخت، یادآور سرویس و دفترچه مشتریان.">
+    <meta property="og:title" content="رانیار - همراه مالی رانندگان">
+    <meta property="og:description" content="مدیریت درآمد، هزینه و سرویس خودرو در یک اپلیکیشن ساده">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/png" href="icon.png">
     <style>
-        body {
-            font-family: Tahoma, sans-serif;
-            background-color: #0D1B2A;
-            color: #FFFFFF;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0D1B2A; --surface: #1B263B; --input: #233047;
+            --primary: #2563EB; --primary-dark: #1E40AF; --accent: #0D9488;
+            --success: #10B981; --error: #EF4444; --warning: #F59E0B;
+            --text: #F8FAFC; --text-secondary: #E2E8F0; --text-muted: #94A3B8; --border: #334155;
         }
-        .card {
-            background-color: #1B263B;
-            border-radius: 16px;
-            padding: 30px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-        }
-        h1 {
-            font-size: 22px;
-            margin-bottom: 10px;
-        }
-        p {
-            color: #94A3B8;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #334155;
-            background-color: #233047;
-            color: #FFFFFF;
-            font-size: 16px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 14px;
-            border-radius: 8px;
-            border: none;
-            background-color: #2563EB;
-            color: #FFFFFF;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button:hover {
-            background-color: #1E40AF;
-        }
-        .success {
-            color: #10B981;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-        .error {
-            color: #EF4444;
-            font-size: 14px;
-            margin-top: 10px;
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Vazirmatn','BYekan',Tahoma,Arial,sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        a { color: inherit; text-decoration: none; }
+        img { max-width: 100%; display: block; }
+        nav { position: fixed; top: 0; right: 0; left: 0; background: rgba(13,27,42,0.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 12px 24px; z-index: 1000; display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 18px; }
+        .nav-logo-mark { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg,var(--primary),var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: white; }
+        .nav-cta { background: var(--primary); color: white; padding: 8px 18px; border-radius: 10px; font-size: 14px; font-weight: bold; }
+        .hero { padding: 120px 24px 60px; text-align: center; background: radial-gradient(ellipse at 50% -20%, rgba(37,99,235,0.25), transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(13,148,136,0.15), transparent 50%); }
+        .hero-badge { display: inline-block; background: var(--surface); border: 1px solid var(--border); padding: 6px 14px; border-radius: 100px; font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+        .hero h1 { font-size: clamp(28px,5vw,48px); font-weight: 900; line-height: 1.3; margin-bottom: 16px; background: linear-gradient(135deg,#FFFFFF 30%,#94A3B8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-subtitle { font-size: clamp(15px,2vw,18px); color: var(--text-muted); max-width: 620px; margin: 0 auto 32px; }
+        .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+        .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; border-radius: 12px; font-weight: bold; font-size: 15px; border: 1px solid transparent; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 10px 30px -10px rgba(37,99,235,0.5); }
+        .btn-secondary { background: var(--surface); color: white; border-color: var(--border); }
+        .phone-showcase { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 24px; }
+        .phone { width: 220px; height: 440px; background: var(--surface); border: 8px solid #0A0F18; border-radius: 32px; overflow: hidden; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.7); position: relative; }
+        .phone::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 90px; height: 20px; background: #0A0F18; border-radius: 0 0 14px 14px; z-index: 2; }
+        .phone-screen { width: 100%; height: 100%; background: var(--bg); display: flex; flex-direction: column; padding: 28px 12px 12px; gap: 8px; font-size: 11px; }
+        .phone-header { background: var(--primary); color: white; padding: 8px; border-radius: 8px; text-align: center; font-size: 10px; font-weight: bold; }
+        .phone-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px; font-size: 10px; color: var(--text-muted); }
+        .phone-card strong { color: var(--text); display: block; font-size: 12px; margin-bottom: 2px; }
+        .phone-card .value { color: var(--success); font-weight: bold; font-size: 14px; }
+        .section { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
+        .section-title { text-align: center; font-size: clamp(22px,3vw,32px); font-weight: 900; margin-bottom: 12px; }
+        .section-subtitle { text-align: center; color: var(--text-muted); margin-bottom: 48px; font-size: 15px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 16px; }
+        .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+        .feature-icon { font-size: 32px; margin-bottom: 12px; display: block; }
+        .feature-card h3 { font-size: 17px; font-weight: bold; margin-bottom: 8px; }
+        .feature-card p { color: var(--text-muted); font-size: 14px; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 16px; margin-top: 32px; }
+        .pricing-card { background: var(--surface); border: 2px solid var(--border); border-radius: 20px; padding: 28px 24px; text-align: center; position: relative; }
+        .pricing-card.featured { border-color: var(--primary); background: linear-gradient(180deg, rgba(37,99,235,0.08), var(--surface)); }
+        .pricing-card.featured::before { content: 'پرطرفدارترین'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 4px 14px; border-radius: 100px; font-size: 12px; font-weight: bold; }
+        .pricing-tier { font-size: 20px; font-weight: 900; margin-bottom: 4px; }
+        .pricing-duration { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; }
+        .pricing-price { font-size: 26px; font-weight: 900; color: var(--primary); margin-bottom: 20px; }
+        .pricing-price small { font-size: 14px; color: var(--text-muted); font-weight: normal; }
+        .pricing-features { list-style: none; text-align: right; margin-bottom: 24px; font-size: 14px; color: var(--text-secondary); }
+        .pricing-features li { padding: 6px 0; }
+        .pricing-features li::before { content: '✓'; color: var(--success); font-weight: bold; margin-left: 8px; }
+        .referral-banner { background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(13,148,136,0.15)); border: 1px solid var(--primary); border-radius: 20px; padding: 40px 24px; text-align: center; }
+        .referral-banner h2 { font-size: clamp(20px,3vw,28px); font-weight: 900; margin-bottom: 12px; }
+        .referral-banner p { color: var(--text-secondary); margin-bottom: 8px; font-size: 15px; }
+        .referral-highlight { font-size: 18px; color: var(--warning); font-weight: bold; margin-top: 16px; }
+        footer { background: var(--surface); border-top: 1px solid var(--border); padding: 40px 24px 24px; text-align: center; margin-top: 40px; }
+        .footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 20px; font-size: 14px; }
+        .footer-links a { color: var(--text-muted); }
+        .footer-copyright { font-size: 13px; color: var(--text-muted); padding-top: 20px; border-top: 1px solid var(--border); }
+        @media (max-width: 640px) {
+            nav { padding: 10px 16px; }
+            .nav-logo { font-size: 16px; }
+            .nav-logo-mark { width: 32px; height: 32px; font-size: 18px; }
+            .nav-cta { padding: 6px 14px; font-size: 13px; }
+            .hero { padding: 100px 16px 40px; }
+            .phone-showcase { gap: 12px; }
+            .phone { width: 160px; height: 320px; }
+            .section { padding: 60px 16px; }
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>بازیابی رمز عبور</h1>
-        <p>رمز عبور جدید خود را وارد کنید</p>
-        <input type="password" id="newPassword" placeholder="رمز عبور جدید" minlength="6">
-        <input type="password" id="confirmPassword" placeholder="تکرار رمز عبور" minlength="6">
-        <button onclick="updatePassword()">تغییر رمز عبور</button>
-        <p id="message"></p>
-    </div>
+    <nav>
+        <div class="nav-logo">
+            <div class="nav-logo-mark">ر</div>
+            <span>رانیار</span>
+        </div>
+        <a href="#download" class="nav-cta">دانلود</a>
+    </nav>
 
-    <script>
-        function getAccessToken() {
-            const hash = window.location.hash.substring(1);
-            const params = new URLSearchParams(hash);
-            return params.get('access_token');
-        }
+    <section class="hero">
+        <div class="hero-badge">✨ همراه مالی رانندگان ایرانی</div>
+        <h1>مدیریت درآمد، هزینه و سرویس خودرو<br>در یک اپلیکیشن ساده</h1>
+        <p class="hero-subtitle">
+            رانیار برای رانندگان تاکسی اینترنتی، آژانس، بین‌شهری و حتی خودروهای شخصی طراحی شده است. تمام دخل و خرج خودروی خود را دقیق و مرتب پیگیری کنید.
+        </p>
+        <div class="hero-buttons">
+            <a href="https://cafebazaar.ir/app/com.sepehri.ranyar" class="btn btn-primary">دانلود از بازار</a>
+            <a href="https://myket.ir/app/com.sepehri.ranyar" class="btn btn-secondary">دانلود از مایکت</a>
+        </div>
 
-        async function updatePassword() {
-            const token = getAccessToken();
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const messageEl = document.getElementById('message');
+        <div class="phone-showcase">
+            <div class="phone"><div class="phone-screen">
+                <div class="phone-header">رانیار</div>
+                <div class="phone-card"><strong>خلاصه امروز</strong><span class="value">۴۸۵,۰۰۰ تومان</span></div>
+                <div class="phone-card"><strong>هزینه امروز</strong><span>۱۵۵,۰۰۰ تومان</span></div>
+                <div class="phone-card"><strong>سوخت امروز</strong><span>۹۹,۰۰۰ تومان</span></div>
+            </div></div>
+            <div class="phone"><div class="phone-screen">
+                <div class="phone-header">سهمیه سوخت</div>
+                <div class="phone-card"><strong>سهمیه ۱</strong><span>۳۰ از ۶۰ لیتر</span></div>
+                <div class="phone-card"><strong>سهمیه ۲</strong><span>۲۰ از ۵۰ لیتر</span></div>
+                <div class="phone-card"><strong>آزاد</strong><span>۱۵ لیتر</span></div>
+            </div></div>
+            <div class="phone"><div class="phone-screen">
+                <div class="phone-header">دفترچه مشتریان</div>
+                <div class="phone-card"><strong>علی احمدی</strong><span style="color:var(--error);">بدهی: ۵۰۰,۰۰۰ تومان</span></div>
+                <div class="phone-card"><strong>سارا رضایی</strong><span style="color:var(--error);">بدهی: ۵۰۰,۰۰۰ تومان</span></div>
+                <div class="phone-card"><strong>رضا محمدی</strong><span style="color:var(--success);">تسویه</span></div>
+            </div></div>
+        </div>
+    </section>
 
-            if (!token) {
-                messageEl.className = 'error';
-                messageEl.textContent = 'لینک نامعتبر است. لطفاً دوباره درخواست دهید.';
-                return;
-            }
+    <section class="section">
+        <h2 class="section-title">چرا رانیار؟</h2>
+        <p class="section-subtitle">همه‌چیز برای مدیریت مالی و فنی خودروی شما در یک‌جا</p>
+        <div class="features-grid">
+            <div class="feature-card"><span class="feature-icon">💰</span><h3>ثبت درآمد و کمیسیون</h3><p>درآمد اسنپ، تپسی، آژانس یا مسافر بین‌شهری را با محاسبه خودکار کمیسیون ثبت کنید.</p></div>
+            <div class="feature-card"><span class="feature-icon">⛽</span><h3>مدیریت سهمیه سوخت</h3><p>سه سهمیه بنزین، گاز و گازوئیل با نمایش باقیمانده ماهانه و قیمت هر لیتر.</p></div>
+            <div class="feature-card"><span class="feature-icon">🔧</span><h3>یادآور سرویس خودرو</h3><p>بر اساس کیلومتر کارکرد، زمان تعویض روغن، لنت، فیلتر و باتری را یادآوری می‌کنیم.</p></div>
+            <div class="feature-card"><span class="feature-icon">📊</span><h3>گزارش‌های مالی دقیق</h3><p>نمودار ماهانه، سود خالص، میانگین درآمد روزانه و تفکیک هزینه‌ها بر اساس دسته.</p></div>
+            <div class="feature-card"><span class="feature-icon">👥</span><h3>دفترچه مشتریان (ویژه)</h3><p>بدهی، پرداخت و صورتحساب مشتریان ثابت مثل دانش‌آموزان سرویس مدرسه.</p></div>
+            <div class="feature-card"><span class="feature-icon">📄</span><h3>یادآور مدارک و بیمه</h3><p>انقضای بیمه شخص ثالث، بدنه، معاینه فنی و گواهینامه را فراموش نکنید.</p></div>
+        </div>
+    </section>
 
-            if (newPassword.length < 6) {
-                messageEl.className = 'error';
-                messageEl.textContent = 'رمز عبور باید حداقل ۶ کاراکتر باشد.';
-                return;
-            }
+    <section class="section">
+        <h2 class="section-title">اشتراک ویژه رانیار</h2>
+        <p class="section-subtitle">با اشتراک ویژه، به تمام امکانات حرفه‌ای دسترسی داشته باشید</p>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-tier">برنز</div>
+                <div class="pricing-duration">۱ ماهه</div>
+                <div class="pricing-price">۹۰,۰۰۰ <small>تومان</small></div>
+                <ul class="pricing-features"><li>دفترچه مشتریان</li><li>یادآورهای پیشرفته</li><li>گزارش‌های کامل</li></ul>
+            </div>
+            <div class="pricing-card featured">
+                <div class="pricing-tier">نقره‌ای</div>
+                <div class="pricing-duration">۳ ماهه</div>
+                <div class="pricing-price">۲۱۵,۰۰۰ <small>تومان</small></div>
+                <ul class="pricing-features"><li>تمام امکانات برنز</li><li>بیمه خودرو</li><li>تعمیرگاه‌ها</li><li>صرفه‌جویی ۲۰٪</li></ul>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-tier">طلایی</div>
+                <div class="pricing-duration">۶ ماهه</div>
+                <div class="pricing-price">۳۵۰,۰۰۰ <small>تومان</small></div>
+                <ul class="pricing-features"><li>تمام امکانات نقره‌ای</li><li>پشتیبان‌گیری ابری</li><li>پشتیبانی اولویت‌دار</li><li>صرفه‌جویی ۳۵٪</li></ul>
+            </div>
+        </div>
+    </section>
 
-            if (newPassword !== confirmPassword) {
-                messageEl.className = 'error';
-                messageEl.textContent = 'رمز عبور و تکرار آن مطابقت ندارند.';
-                return;
-            }
+    <section class="section" style="padding-top: 20px;">
+        <div class="referral-banner">
+            <h2>🎁 دوستانت را دعوت کن، رایگان استفاده کن</h2>
+            <p>کد دعوت خود را به دوستانت بده. وقتی آن‌ها با کد تو ثبت‌نام کنند و اشتراک ویژه بخرند، تو جایزه می‌گیری.</p>
+            <p class="referral-highlight">با دعوت ۴ دوست، ۶ ماه اشتراک ویژه رایگان!</p>
+        </div>
+    </section>
 
-            try {
-                const response = await fetch('https://xpbvabrxqxhlunonigac.supabase.co/auth/v1/user', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token,
-                        'apikey': 'sb_publishable_b68jG62AzuCm0DTB8WYuUg_VrYhTMZz'
-                    },
-                    body: JSON.stringify({
-                        password: newPassword
-                    })
-                });
+    <section class="section" id="download" style="padding-top: 20px; text-align: center;">
+        <h2 class="section-title">همین امروز رانیار را نصب کن</h2>
+        <p class="section-subtitle">رایگان است. همین حالا شروع کن!</p>
+        <div class="hero-buttons">
+            <a href="https://cafebazaar.ir/app/com.sepehri.ranyar" class="btn btn-primary">دانلود از بازار</a>
+            <a href="https://myket.ir/app/com.sepehri.ranyar" class="btn btn-secondary">دانلود از مایکت</a>
+        </div>
+    </section>
 
-                if (response.ok) {
-                    messageEl.className = 'success';
-                    messageEl.textContent = 'رمز عبور با موفقیت تغییر کرد! می‌توانید به برنامه برگردید.';
-                } else {
-                    messageEl.className = 'error';
-                    messageEl.textContent = 'خطا در تغییر رمز عبور. لطفاً دوباره تلاش کنید.';
-                }
-            } catch (err) {
-                messageEl.className = 'error';
-                messageEl.textContent = 'خطا در ارتباط با سرور.';
-            }
-        }
-    </script>
+    <footer>
+        <div class="footer-links">
+            <a href="https://github.com/Ranyarapp/ranyar-files">حریم خصوصی</a>
+            <a href="mailto:o.mcr2020@gmail.com">تماس با ما</a>
+        </div>
+        <div class="footer-copyright">
+            ساخته شده با ❤️ برای رانندگان ایرانی · © ۱۴۰۵ رانیار
+        </div>
+    </footer>
 </body>
 </html>
