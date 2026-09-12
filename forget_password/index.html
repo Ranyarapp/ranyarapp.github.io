@@ -87,6 +87,63 @@
             return params.get('access_token');
         }
 
+        function translateError(status, errBody) {
+            let code = '';
+            let msg = '';
+
+            try {
+                const parsed = JSON.parse(errBody);
+                code = parsed.error_code || parsed.code || '';
+                msg = parsed.msg || parsed.message || '';
+            } catch (e) {
+                msg = errBody || '';
+            }
+
+            // Supabase error codes → Persian messages
+            const translations = {
+                'same_password':       'رمز عبور جدید باید با رمز عبور قبلی متفاوت باشد.',
+                'weak_password':       'رمز عبور انتخابی ضعیف است. رمز قوی‌تری انتخاب کنید.',
+                'validation_failed':   'اطلاعات وارد شده معتبر نیست.',
+                'over_request_rate_limit': 'تعداد درخواست‌ها زیاد است. لطفاً چند دقیقه دیگر تلاش کنید.',
+                'over_email_send_rate_limit': 'تعداد درخواست‌ها زیاد است. لطفاً چند دقیقه دیگر تلاش کنید.',
+                'user_not_found':      'کاربری با این اطلاعات یافت نشد.',
+                'email_not_confirmed': 'ایمیل شما تأیید نشده است.',
+                'session_expired':     'لینک بازیابی منقضی شده است. لطفاً دوباره از برنامه درخواست دهید.',
+                'token_expired':       'لینک بازیابی منقضی شده است. لطفاً دوباره از برنامه درخواست دهید.',
+                'invalid_token':       'لینک بازیابی نامعتبر است. لطفاً دوباره درخواست دهید.',
+                'otp_expired':         'لینک بازیابی منقضی شده است. لطفاً دوباره از برنامه درخواست دهید.',
+                'reauthentication_needed': 'برای تغییر رمز عبور باید دوباره وارد شوید.',
+                'password_too_short':  'رمز عبور باید حداقل ۶ کاراکتر باشد.',
+                'password_too_long':   'رمز عبور بسیار طولانی است.',
+                'invalid_credentials': 'اطلاعات ورود نامعتبر است.',
+                'unauthorized':        'دسترسی غیرمجاز. لطفاً دوباره درخواست دهید.',
+                'not_found':           'اطلاعات یافت نشد.'
+            };
+
+            if (translations[code]) {
+                return translations[code];
+            }
+
+            // Fallback by HTTP status code
+            if (status === 401 || status === 403) {
+                return 'لینک بازیابی منقضی یا نامعتبر است. لطفاً دوباره از برنامه درخواست دهید.';
+            }
+            if (status === 422) {
+                return 'اطلاعات وارد شده معتبر نیست. لطفاً دوباره بررسی کنید.';
+            }
+            if (status === 429) {
+                return 'تعداد درخواست‌ها زیاد است. لطفاً چند دقیقه دیگر تلاش کنید.';
+            }
+            if (status >= 500) {
+                return 'سرور موقتاً در دسترس نیست. لطفاً دوباره تلاش کنید.';
+            }
+
+            // Last resort: show raw msg if it's non-English (likely user-friendly)
+            if (msg && !/^[A-Za-z\s\.\,]+$/.test(msg)) {
+                return msg;
+            }
+            return 'خطا در تغییر رمز عبور. لطفاً دوباره تلاش کنید.';
+        }
         async function updatePassword() {
             const token = getAccessToken();
             const newPassword = document.getElementById('newPassword').value;
@@ -130,12 +187,12 @@
                 } else {
                     const errBody = await response.text();
                     messageEl.className = 'error';
-                    messageEl.textContent = `خطا (${response.status}): ${errBody || 'بدون پاسخ'}`;
+                    messageEl.textContent = translateError(response.status, errBody);
                     console.error('Reset failed:', response.status, errBody);
                 }
             } catch (err) {
                 messageEl.className = 'error';
-                messageEl.textContent = 'خطا: ' + (err && err.message ? err.message : err);
+                messageEl.textContent = 'ارتباط با سرور برقرار نشد. لطفاً اینترنت خود را بررسی کنید.';
                 console.error('Reset error:', err);
             }
         }
