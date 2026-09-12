@@ -1,8 +1,8 @@
 {
   "id": "test-notice-002",
-  "title": "پیام جدید برای همه کاربران",
-  "message": "این پیام دوم است. باید بعد از بستن قبلی دوباره ظاهر شود.",
+  "title": "",
+  "message": "",
   "action_text": "",
   "action_url": "",
-  "is_active": true
+  "is_active": false
 }
