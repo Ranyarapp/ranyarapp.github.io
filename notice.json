@@ -1,8 +1,8 @@
 {
-  "id": "initial-placeholder",
-  "title": "",
-  "message": "",
-  "action_text": "",
-  "action_url": "",
-  "is_active": false
+  "id": "test-notice-001",
+  "title": "نسخه جدید رانیار",
+  "message": "این یک پیام تستی است. اگر این را می‌بینید، سیستم پیام‌رسانی به‌درستی کار می‌کند.",
+  "action_text": "بازدید سایت",
+  "action_url": "https://ranyarapp.github.io",
+  "is_active": true
 }
