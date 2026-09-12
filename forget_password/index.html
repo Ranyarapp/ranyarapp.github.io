@@ -128,12 +128,15 @@
                     messageEl.className = 'success';
                     messageEl.textContent = 'رمز عبور با موفقیت تغییر کرد! می‌توانید به برنامه برگردید.';
                 } else {
+                    const errBody = await response.text();
                     messageEl.className = 'error';
-                    messageEl.textContent = 'خطا در تغییر رمز عبور. لطفاً دوباره تلاش کنید.';
+                    messageEl.textContent = `خطا (${response.status}): ${errBody || 'بدون پاسخ'}`;
+                    console.error('Reset failed:', response.status, errBody);
                 }
             } catch (err) {
                 messageEl.className = 'error';
-                messageEl.textContent = 'خطا در ارتباط با سرور.';
+                messageEl.textContent = 'خطا: ' + (err && err.message ? err.message : err);
+                console.error('Reset error:', err);
             }
         }
     </script>
